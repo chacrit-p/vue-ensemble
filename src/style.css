@@ -8,3 +8,8 @@
 body {
   font-family: "Inter", serif;
 }
+
+select,
+input {
+  width: 100%;
+}

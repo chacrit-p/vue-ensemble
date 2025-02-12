@@ -1,0 +1,16 @@
+export default {
+  "Student": 0,
+  "Civil Engineer": 1,
+  "Architect": 2,
+  "UX/UI Designer": 3,
+  "Digital Marketer": 4,
+  "Content Writer": 5,
+  "Educational Consultant": 6,
+  "Teacher": 7,
+  "Manager": 8,
+  "Chef": 9,
+  "Doctor": 10,
+  "Lawyer": 11,
+  "Entrepreneur": 12,
+  "Pharmacist": 13,
+};
