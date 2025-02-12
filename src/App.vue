@@ -32,13 +32,25 @@ const form = ref({
   error: "",
 });
 
+const scrollToTop = () => {
+  if (typeof window !== "undefined") {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+};
+
 const predict = () => {
   form.loadingState = true;
+  form.errros = [];
+  form.error = "";
   axios
     .post(`${BASE_URL}/predict`, form.value)
     .then((response) => {
       const data = response.data;
-      predictState.value = data.prediction[0];
+      predictState.value = data.prediction;
+      scrollToTop();
     })
     .catch((error) => {
       if (
@@ -79,19 +91,35 @@ const predict = () => {
         </svg>
         <span>Error! {{ form.error }}.</span>
       </div>
-      <h1 class="text-3xl font-bold text-center leading-loose mb-4">
-        Student Depression Predict 😁🧑‍🎓
-      </h1>
 
-      <form @submit.prevent="predict">
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Select Gender</legend>
-          <select v-model="form.gender" class="select">
-            <option value="0">Male</option>
-            <option value="1">Female</option>
-          </select>
-          <InputError :message="form.errors.gender" />
-        </fieldset>
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold text-center">Depression Predict 😁🧑‍🎓</h1>
+        <p class="text-base-content/80 text-center mt-1">Model Accuracy: 84%</p>
+      </div>
+
+      <div id="predict" class="mb-2" v-if="predictState">
+        <div
+          v-if="predictState[0]"
+          class="card shadow-xl p-5 border border-base-content/10 w-fit mx-auto"
+        >
+          <div class="flex flex-col items-center justify-center">
+            <p class="text-7xl">😡</p>
+            <p class="font-bold mt-2">You are depressed.</p>
+          </div>
+        </div>
+
+        <div
+          v-else
+          class="card shadow-xl p-5 border border-base-content/10 w-fit mx-auto"
+        >
+          <div class="flex flex-col items-center justify-center">
+            <p class="text-7xl">😊</p>
+            <p class="font-bold mt-2">You are not depressed.</p>
+          </div>
+        </div>
+      </div>
+
+      <form class="space-y-2" @submit.prevent="predict">
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Enter Your age</legend>
           <input
@@ -103,6 +131,26 @@ const predict = () => {
             max="59"
           />
           <InputError :message="form.errors.age" />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Enter Your CGA</legend>
+          <input
+            v-model="form.cga"
+            type="number"
+            class="input"
+            placeholder="0-10"
+            min="0"
+            max="10"
+          />
+          <InputError :message="form.errors.cga" />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Select Gender</legend>
+          <select v-model="form.gender" class="select">
+            <option value="0">Male</option>
+            <option value="1">Female</option>
+          </select>
+          <InputError :message="form.errors.gender" />
         </fieldset>
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Select Profession</legend>
@@ -141,18 +189,7 @@ const predict = () => {
           </select>
           <InputError :message="form.errors.work_pressure" />
         </fieldset>
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Enter Your CGA</legend>
-          <input
-            v-model="form.cga"
-            type="number"
-            class="input"
-            placeholder="0-10"
-            min="0"
-            max="10"
-          />
-          <InputError :message="form.errors.cga" />
-        </fieldset>
+
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Select Study Satisfaction</legend>
           <select v-model="form.study_satisfaction" class="select">
@@ -258,6 +295,7 @@ const predict = () => {
           <InputError :message="form.errors.family_history_mental_illness" />
         </fieldset>
         <button
+          :disabled="form.loadingState"
           :class="{ 'btn-disabled': form.loadingState }"
           class="btn btn-block btn-primary mt-4"
           type="submit"
