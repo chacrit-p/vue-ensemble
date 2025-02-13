@@ -1,13 +1,13 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import InputError from "./components/InputError.vue";
 import professions from "./data/professions.js";
 import sleep_durations from "./data/sleep_durations.js";
 import dietary_habits from "./data/dietary_habits.js";
 import degrees from "./data/degrees.js";
 
-const BASE_URL = process.env.VITE_BASE_API_URL;
+const BASE_URL = "https://flask-hello-world-two-pied.vercel.app";
 
 const predictState = ref(null);
 
