@@ -7,7 +7,7 @@ import sleep_durations from "./data/sleep_durations.js";
 import dietary_habits from "./data/dietary_habits.js";
 import degrees from "./data/degrees.js";
 
-const BASE_URL = import.meta.env.VITE_BASE_API_URL;
+const BASE_URL = process.env.VITE_BASE_API_URL;
 
 const predictState = ref(null);
 
