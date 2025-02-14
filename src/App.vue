@@ -1,13 +1,13 @@
 <script setup>
-import axios from "axios";
 import { ref } from "vue";
+import axios from "axios";
 import InputError from "./components/InputError.vue";
-import professions from "./data/professions.js";
-import sleep_durations from "./data/sleep_durations.js";
-import dietary_habits from "./data/dietary_habits.js";
-import degrees from "./data/degrees.js";
+import professions from "./configs/professions.js";
+import sleep_durations from "./configs/sleep_durations.js";
+import dietary_habits from "./configs/dietary_habits.js";
+import degrees from "./configs/degrees.js";
 
-const BASE_URL = "https://flask-hello-world-two-pied.vercel.app";
+const BASE_URL = import.meta.env.VITE_BASE_API_URL;
 
 const predictState = ref(null);
 
@@ -42,9 +42,9 @@ const scrollToTop = () => {
 };
 
 const predict = () => {
-  form.loadingState = true;
-  form.errros = [];
-  form.error = "";
+  form.value.loadingState = true;
+  form.value.errors = [];
+  form.value.error = "";
   axios
     .post(`${BASE_URL}/predict`, form.value)
     .then((response) => {
@@ -67,7 +67,7 @@ const predict = () => {
       }
     })
     .finally(() => {
-      form.loadingState = false;
+      form.value.loadingState = false;
     });
 };
 </script>
@@ -93,33 +93,45 @@ const predict = () => {
       </div>
 
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-center">Depression Predict 😁🧑‍🎓</h1>
+        <h1 class="text-3xl font-bold text-center">
+          Student Depression Predict 😁🧑‍🎓
+        </h1>
         <p class="text-base-content/80 text-center mt-1">Model Accuracy: 84%</p>
       </div>
 
-      <div id="predict" class="mb-2" v-if="predictState">
+      <div id="predict" class="mb-6" v-if="predictState">
         <div
-          v-if="predictState[0]"
-          class="card shadow-xl p-5 border border-base-content/10 w-fit mx-auto"
+          :class="
+            predictState[0]
+              ? 'bg-error border-error'
+              : 'bg-success  border-success'
+          "
+          class="rounded shadow-xl border p-5 flex justify-center items-center w-full h-[175px] mx-auto bg-error border-error"
         >
           <div class="flex flex-col items-center justify-center">
-            <p class="text-7xl">😡</p>
-            <p class="font-bold mt-2">You are depressed.</p>
-          </div>
-        </div>
-
-        <div
-          v-else
-          class="card shadow-xl p-5 border border-base-content/10 w-fit mx-auto"
-        >
-          <div class="flex flex-col items-center justify-center">
-            <p class="text-7xl">😊</p>
-            <p class="font-bold mt-2">You are not depressed.</p>
+            <p class="text-7xl">
+              {{ predictState[0] ? "😡" : "😊" }}
+            </p>
+            <p
+              :class="
+                predictState[0] ? 'text-error-content' : 'text-success-content'
+              "
+              class="text-xl underline text-center underline-offset-2 font-bold mt-4"
+            >
+              {{
+                predictState[0]
+                  ? "You are depressed Call Doctor immediately."
+                  : "You are not depressed."
+              }}
+            </p>
           </div>
         </div>
       </div>
 
-      <form class="space-y-2" @submit.prevent="predict">
+      <form
+        class="grid grid-cols-2 gap-2 items-center"
+        @submit.prevent="predict"
+      >
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Enter Your age</legend>
           <input
@@ -297,10 +309,14 @@ const predict = () => {
         <button
           :disabled="form.loadingState"
           :class="{ 'btn-disabled': form.loadingState }"
-          class="btn btn-block btn-primary mt-4"
+          class="col-span-2 mt-4 btn btn-block btn-primary"
           type="submit"
         >
-          Predict
+          <span
+            v-if="form.loadingState"
+            class="loading loading-spinner loading-md"
+          ></span>
+          <span v-else>Predict</span>
         </button>
       </form>
     </div>
