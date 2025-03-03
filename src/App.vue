@@ -311,10 +311,10 @@ const predict = () => {
           class="col-span-3 mt-4 btn btn-lg btn-block btn-primary"
           type="submit"
         >
-          <span
-            v-if="form.loadingState"
-            class="loading loading-spinner loading-md"
-          ></span>
+          <div class="flex items-center gap-2" v-if="form.loadingState">
+            <span class="loading loading-spinner loading-md"></span>
+            <span>prediction.....</span>
+          </div>
           <span v-else>Predict</span>
         </button>
       </form>
