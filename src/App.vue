@@ -13,11 +13,11 @@ const predictState = ref(null);
 
 const form = ref({
   gender: 0,
-  age: null,
+  age: 18,
   profession: 0,
   academic_pressure: 0,
   work_pressure: 0,
-  cga: null,
+  cga: 5,
   study_satisfaction: 0,
   job_satisfaction: 0,
   sleep_duration: 0,
@@ -74,7 +74,7 @@ const predict = () => {
 
 <template>
   <div class="p-5 min-h-screen">
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-3xl mx-auto">
       <div v-if="form.error" role="alert" class="alert alert-error my-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ const predict = () => {
       </div>
 
       <form
-        class="grid grid-cols-2 gap-2 items-center"
+        class="grid grid-cols-2 lg:grid-cols-3 gap-3 w-full"
         @submit.prevent="predict"
       >
         <fieldset class="fieldset">
@@ -201,7 +201,6 @@ const predict = () => {
           </select>
           <InputError :message="form.errors.work_pressure" />
         </fieldset>
-
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Select Study Satisfaction</legend>
           <select v-model="form.study_satisfaction" class="select">
@@ -309,7 +308,7 @@ const predict = () => {
         <button
           :disabled="form.loadingState"
           :class="{ 'btn-disabled': form.loadingState }"
-          class="col-span-2 mt-4 btn btn-block btn-primary"
+          class="col-span-3 mt-4 btn btn-lg btn-block btn-primary"
           type="submit"
         >
           <span
