@@ -92,7 +92,7 @@ const predict = () => {
         <span>Error! {{ form.error }}.</span>
       </div>
 
-      <div class="mb-6">
+      <div class="my-6">
         <h1 class="text-3xl font-bold text-center">
           Student Depression Predict 😁🧑‍🎓
         </h1>
@@ -129,7 +129,7 @@ const predict = () => {
       </div>
 
       <form
-        class="grid grid-cols-2 lg:grid-cols-3 gap-3 w-full"
+        class="flex flex-col md:grid md:grid-cols-3 gap-3 w-full"
         @submit.prevent="predict"
       >
         <fieldset class="fieldset">
